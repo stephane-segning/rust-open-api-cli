@@ -75,6 +75,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: .
+      - name: Check
+        run: ls
       - name: Upload Release Asset (Linux)
         id: upload_release_asset_linux
         uses: actions/upload-release-asset@v1
