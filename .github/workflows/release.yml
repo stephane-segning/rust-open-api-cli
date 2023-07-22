@@ -54,6 +54,7 @@ jobs:
           path: ${{ matrix.up }}
 
   release:
+    name: Release
     permissions: write-all
     needs: build
     runs-on: ubuntu-latest
@@ -80,6 +81,6 @@ jobs:
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v1
         with:
-          files: openapi_cli_*
+          files: *
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
