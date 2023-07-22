@@ -31,11 +31,11 @@ enum Cli {
         language: String,
 
         /// Configuration options for the generated code
-        #[structopt(long = "config-options")]
+        #[structopt(short = "s", long = "config-options")]
         config_options: Option<Vec<String>>,
 
         /// Configuration values for the generated code
-        #[structopt(long = "config-values")]
+        #[structopt(short = "a", long = "config-values")]
         config_values: Option<Vec<String>>,
     },
 }
@@ -127,3 +127,31 @@ fn generate_code(
     Ok(())
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use std::io::Read;
+
+    #[test]
+    fn test_download_file() -> Result<(), Box<dyn Error>> {
+        let url = "https://www.example.com";
+        let dest_path = "./test_file.html";
+
+        // Call the function
+        download_file(url, dest_path)?;
+
+        // Check that the file was created
+        let mut file = File::open(dest_path)?;
+        let mut contents = String::new();
+        file.read_to_string(&mut contents)?;
+
+        // The file should contain the HTML of the example.com home page
+        assert!(contents.contains("<title>Example Domain</title>"));
+
+        // Clean up
+        fs::remove_file(dest_path)?;
+
+        Ok(())
+    }
+}

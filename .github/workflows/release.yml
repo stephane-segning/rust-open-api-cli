@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Set up Cross
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
+          override: true
+      - name: Build for Linux
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target=x86_64-unknown-linux-gnu
+      - name: Build for macOS
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target=x86_64-apple-darwin
+      - name: Build for Windows
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target=x86_64-pc-windows-gnu
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset (Linux)
+        id: upload_release_asset_linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/x86_64-unknown-linux-gnu/release/openapi_cli
+          asset_name: openapi_cli_linux
+          asset_content_type: application/octet-stream
+      - name: Upload Release Asset (macOS)
+        id: upload_release_asset_macos
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/x86_64-apple-darwin/release/openapi_cli
+          asset_name: openapi_cli_macos
+          asset_content_type: application/octet-stream
+      - name: Upload Release Asset (Windows)
+        id: upload_release_asset_windows
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/openapi_cli.exe
+          asset_name: openapi_cli_windows.exe
+          asset_content_type: application/octet-stream
