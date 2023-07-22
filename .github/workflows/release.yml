@@ -22,14 +22,17 @@ jobs:
             asset_name: openapi_cli_linux
             os: ubuntu-latest
             mv: mv
+            extension: ''
           - target: x86_64-apple-darwin
             asset_name: openapi_cli_macos
             os: macos-latest
             mv: mv
+            extension: ''
           - target: x86_64-pc-windows-gnu
             asset_name: openapi_cli_windows.exe
             os: windows-latest
             mv: ren
+            extension: '.exe'
 
     steps:
       - uses: actions/checkout@v3
@@ -40,17 +43,12 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
-      - name: Install JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
       - name: Build
         run: cargo build --release --verbose
       - name: Check
         run: ls target/release
       - name: Move
-        run: ${{ matrix.mv }} target/release/openapi_gen target/release/${{ matrix.asset_name }}
+        run: ${{ matrix.mv }} target/release/openapi_gen${{ matrix.extension }} target/release/${{ matrix.asset_name }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
