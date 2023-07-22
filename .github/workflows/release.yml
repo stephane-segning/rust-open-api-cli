@@ -77,33 +77,12 @@ jobs:
           path: .
       - name: Check
         run: ls
-      - name: Upload Release Asset (Linux)
-        id: upload_release_asset_linux
-        uses: actions/upload-release-asset@v1
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            openapi_cli_linux
+            openapi_cli_macos
+            openapi_cli_windows.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./openapi_cli_linux
-          asset_name: openapi_cli_linux
-          asset_content_type: application/octet-stream
-      - name: Upload Release Asset (macOS)
-        id: upload_release_asset_macos
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./openapi_cli_macos
-          asset_name: openapi_cli_macos
-          asset_content_type: application/octet-stream
-      - name: Upload Release Asset (Windows)
-        id: upload_release_asset_windows
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./openapi_cli_windows.exe
-          asset_name: openapi_cli_windows.exe
-          asset_content_type: application/octet-stream
