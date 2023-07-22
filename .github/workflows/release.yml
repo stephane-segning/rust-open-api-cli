@@ -12,20 +12,24 @@ env:
 
 jobs:
   build:
-    name: Build for ${{ matrix.target }}
-    runs-on: ubuntu-latest
+    permissions: write-all
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
           - target: x86_64-unknown-linux-gnu
             asset_name: openapi_cli_linux
+            os: ubuntu-latest
           - target: x86_64-apple-darwin
             asset_name: openapi_cli_macos
+            os: macos-latest
           - target: x86_64-pc-windows-gnu
             asset_name: openapi_cli_windows.exe
+            os: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -38,19 +42,18 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-      - name: Install Cross
-        run: cargo install cross
       - name: Build
-        run: cross build --release --target ${{ matrix.target }} --verbose
-      - name: Rename
-        run: mv target/${{ matrix.target }}/release/openapi_cli target/${{ matrix.target }}/release/${{ matrix.asset_name }}
+        run: cargo build --release --verbose
+      - name: Check
+        run: ls -la target/release
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.asset_name }}
-          path: target/${{ matrix.target }}/release/${{ matrix.asset_name }}
+          path: target/release/${{ matrix.asset_name }}
 
   release:
+    permissions: write-all
     needs: build
     runs-on: ubuntu-latest
     steps:
