@@ -1,10 +1,14 @@
-name: Rust
+name: Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - '**'
+    tags-ignore:
+      - 'v*'
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - '**'
 
 env:
   CARGO_TERM_COLOR: always
