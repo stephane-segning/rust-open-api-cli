@@ -81,8 +81,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            openapi_cli_linux
-            openapi_cli_macos
-            openapi_cli_windows.exe
+            ./openapi_cli_linux
+            ./openapi_cli_macos
+            ./openapi_cli_windows.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
