@@ -29,7 +29,7 @@ To use the application, run the command below from the command line:
 $ ./target/release/openapi_cli generate -v <version> -i <input> -o <output> -l <language>
 ```
 
-Replace <version> with the version of OpenAPI generator CLI, <**input>** with the path to your OpenAPI specification file, <output> with the path to the directory where the generated code should be saved, and <language> with the target language for the generated code.
+Replace <version> with the version of OpenAPI generator CLI, `<input>` with the path to your OpenAPI specification file, <output> with the path to the directory where the generated code should be saved, and <language> with the target language for the generated code.
 
 ## Contributing
 
