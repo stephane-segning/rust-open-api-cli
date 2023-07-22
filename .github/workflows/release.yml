@@ -47,6 +47,8 @@ jobs:
           java-version: '11'
       - name: Build
         run: cargo build --release --verbose
+      - name: Check
+        run: ls target/release
       - name: Move
         run: ${{ matrix.mv }} target/release/openapi_gen target/release/${{ matrix.asset_name }}
       - name: Upload Artifact
