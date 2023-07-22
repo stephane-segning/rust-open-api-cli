@@ -29,7 +29,7 @@ jobs:
           - target: x86_64-pc-windows-gnu
             asset_name: openapi_cli_windows.exe
             os: windows-latest
-            mv: mv target\release\openapi_gen.exe openapi_cli_windows.exe
+            mv: mv target\release\openapi_gen.exe target\release\openapi_cli_windows.exe
             up: target\release\openapi_cli_windows.exe
 
     steps:
